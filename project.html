@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Who wants to be a Trillioner</title>
+    <title>Quiz App</title>
     <link rel="stylesheet" href="project.css">
+    <link rel="apple-touch-icon.png" sizes="180x180" href="final\apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="final\favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="final\favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="" href="favicon.ico">
+    
+    
+</head> 
 <body>
     <div id="quiz-container">
-     <div id="question-container">
-        <h2 id="question"></h2>
-        <div id="answer-buttons" class="btn-container"></div>
+        <div id="question-container">
+            <div id="question">Question text</div>
+            <div id="options">
+                <button class="option">Option 1</button>
+                <button class="option">Option 2</button>
+                <button class="option">Option 3</button>
+                <button class="option">Option 4</button>
+            </div>
+            <button id="hint-button">Hint</button>
+            <div id="hint">Hint text</div>
+            <button id="lifeline-button">50/50 Lifeline</button>
+        </div>
+        <div id="leaderboard">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboard-list"></ul>
+        </div>
     </div>
-    <button id="next-btn" class="btn">Next</button>
-    <div id="result-container" class="hide">
-        <h2>Quiz Results</h2>
-        <div id="results"></div>
-        <h3 id="score"></h3>
-    </div>
-</div>
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
