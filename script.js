@@ -1,104 +1,97 @@
 const questions = [
     {
         question: "What is the capital of France?",
-        answers: [
-            { text: "Berlin", correct: false },
-            { text: "Madrid", correct: false },
-            { text: "Paris", correct: true },
-            { text: "Lisbon", correct: false }
-        ]
+        options: ["Berlin", "Madrid", "Paris", "Lisbon"],
+        answer: 2,
+        hint: "It's also known as the City of Light."
     },
     {
-        question: "Who is on the 1000 naira note?",
-        answers: [
-            { text: "Alhaji Aliyu mai borno", correct: true },
-            { text: "Mark samson", correct: false },
-            { text: "Frank lampard", correct: false },
-            { text: "Lionel Messi", correct: false }
-        ]
+        question: "What is the name of the first man to reach the moon",
+        options: ["Neven Armstrong", "Neil Armstrong", "Neile Amstrong", "Bola Ahmed Tinubu"],
+        answer: 1,
+        hint: "You are on your own for this one."
+    },
+    {
+        question: "Who is the player with the most ballondior",
+        options: ["Lionel Messi", "Cristiano Ronaldo", "David Beckham", "Wayne Rooney"],
+        answer: 0,
+        hint: "It's has L as the first letter."
+    },
+    {
+        question: "What is usain bolts first olympic record",
+        options: ["9.63", "9.59", "10.4", "10.4"],
+        answer: 0,
+        hint: "It's has the largest number after the decimal."
     },
     {
         question: "Who is the president of Ukraine",
-        answers: [
-            { text: "Volodymyr Zielenski", correct: true },
-            { text: "Piotr Zelienski", correct: false },
-            { text: "Asta", correct: false },
-            { text: "Milly Bobby Brown", correct: false }
-        ]
+        options: ["Volodymyr zielenski", "Piotr Zielenski", "Putin", "Trump"],
+        answer: 0,
+        hint: "It is not the footballer."
     },
-    {
-        question: "Who is the player with the most ballondior?",
-        answers: [
-            { text: "Cristiano Ronaldo", correct: false },
-            { text: "Lionel Messi", correct: true },
-            { text: "Ronaldinho Gaucho", correct: false },
-            { text: "Neymar jr", correct: false }
-        ]
-    },
-    {
-        question: "What is Usain Bolts First Olympic record?",
-        answers: [
-            { text: "9.63", correct: true },
-            { text: "9.59", correct: false },
-            { text: "9.7", correct: false },
-            { text: "10.5", correct: false }
-        ]
-    },
+    
 ];
-const questionContainer = document.getElementById('question-container');
-const questionElement = document.getElementById('question');
-const answerButtonsElement = document.getElementById('answer-buttons');
-const nextButton = document.getElementById('next-btn');
-const resultContainer = document.getElementById('result-container');
-const resultsElement = document.getElementById('results');
-const scoreElement = document.getElementById('score');
 
-let currentQuestionIndex = 0;
+let currentQuestion = 0;
 let score = 0;
 
-function startQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    nextButton.classList.add('hide');
-    resultContainer.classList.add('hide');
-    questionContainer.classList.remove('hide');
-    showQuestion(questions[currentQuestionIndex]);
+document.addEventListener('DOMContentLoaded', () => {
+    loadQuestion();
+
+    document.querySelectorAll('.option').forEach((button, index) => {
+        button.addEventListener('click', () => checkAnswer(index));
+    });
+
+    document.getElementById('hint-button').addEventListener('click', showHint);
+    document.getElementById('lifeline-button').addEventListener('click', useLifeline);
+});
+
+function loadQuestion() {
+    const question = questions[currentQuestion];
+    document.getElementById('question').textContent = question.question;
+    document.querySelectorAll('.option').forEach((button, index) => {
+        button.textContent = question.options[index];
+    });
+    document.getElementById('hint').style.display = 'none';
 }
 
-function showQuestion(question) {
-    questionElement.innerText = question.question;
-    answerButtonsElement.innerHTML = '';
-    question.answers.forEach(answer => {
-        const button = document.createElement('button');
-        button.innerText = answer.text;
-        button.classList.add('btn');
-        button.addEventListener('click', () => selectAnswer(answer));
-        answerButtonsElement.appendChild(button);
+function checkAnswer(selected) {
+    const question = questions[currentQuestion];
+    if (selected === question.answer) {
+        alert('Correct!');
+        score++;
+    } else {
+        alert('Wrong!');
+    }
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+        loadQuestion();
+    } else {
+        showLeaderboard();
+    }
+}
+
+function showHint() {
+    const question = questions[currentQuestion];
+    document.getElementById('hint').textContent = question.hint;
+    document.getElementById('hint').style.display = 'block';
+}
+
+function useLifeline() {
+    const question = questions[currentQuestion];
+    const options = document.querySelectorAll('.option');
+    let count = 0;
+    options.forEach((button, index) => {
+        if (index !== question.answer && count < 2) {
+            button.style.display = 'none';
+            count++;
+        }
     });
 }
 
-function selectAnswer(answer) {
-    if (answer.correct) {
-        score++;
-    }
-    if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex++;
-        showQuestion(questions[currentQuestionIndex]);
-    } else {
-        endQuiz();
-    }
+function showLeaderboard() {
+    document.getElementById('question-container').style.display = 'none';
+    const leaderboard = document.getElementById('leaderboard-list');
+    leaderboard.innerHTML = `<li>Your score: ${score}</li>`;
+    document.getElementById('leaderboard').style.display = 'block';
 }
-
-function endQuiz() {
-    questionContainer.classList.add('hide');
-    resultContainer.classList.remove('hide');
-    resultsElement.innerHTML = questions.map((q, index) => {
-        const correctAnswer = q.answers.find(a => a.correct).text;
-        return `<p>Q${index + 1}: ${q.question} <br> Correct Answer: ${correctAnswer}</p>`;
-    }).join('');
-    scoreElement.innerText = `Your score: ${score} / ${questions.length}`;
-}
-
-nextButton.addEventListener('click', startQuiz);
-
-startQuiz();
